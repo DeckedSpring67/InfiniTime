@@ -59,6 +59,8 @@ Alarm::Alarm(DisplayApp* app, Controllers::DateTime& dateTimeController): Screen
   lv_obj_set_style_local_text_color(time, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GRAY);
 
   lv_label_set_text_fmt(time, "%02d:%02d", dateTimeController.AlarmHour(), dateTimeController.AlarmMinute());
+  HoursToSet = dateTimeController.AlarmHour();
+  MinutesToSet = dateTimeController.AlarmMinute();
 
   lv_obj_align(time, lv_scr_act(), LV_ALIGN_IN_LEFT_MID, 0, -20);
 
@@ -96,7 +98,18 @@ void Alarm::OnButtonEvent(lv_obj_t* obj, lv_event_t event) {
 
       } else if (MinutesToSet + HoursToSet > 0) {
         lv_label_set_text(txtPlayPause, "UNSET");
-	dateTimeController.SetAlarm(dateTimeController.Year(),(uint8_t) dateTimeController.Month(), dateTimeController.Day(), HoursToSet, MinutesToSet);
+
+	int minutesDay = (dateTimeController.Hours() * 60) + (dateTimeController.Minutes());
+	int alarmMinutes = (HoursToSet*60) + MinutesToSet;
+
+	if(minutesDay >= alarmMinutes){
+		dateTimeController.SetAlarm(dateTimeController.Year(),(uint8_t) dateTimeController.Month(), dateTimeController.Day()+1, HoursToSet, MinutesToSet);
+	}
+	else{
+		dateTimeController.SetAlarm(dateTimeController.Year(),(uint8_t) dateTimeController.Month(), dateTimeController.Day(), HoursToSet, MinutesToSet);
+	}
+
+
         lv_obj_del(btnHoursDown);
         btnHoursDown = nullptr;
         lv_obj_del(btnHoursUp);
