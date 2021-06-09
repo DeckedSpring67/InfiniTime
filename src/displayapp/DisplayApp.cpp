@@ -27,7 +27,7 @@
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/BatteryInfo.h"
 #include "displayapp/screens/Steps.h"
-#include "displayapp/screens/HelloWorld.h"
+#include "displayapp/screens/Alarm.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -160,6 +160,10 @@ void DisplayApp::Refresh() {
           LoadApp(Apps::Timer, DisplayApp::FullRefreshDirections::Down);
         }
         break;
+      case Messages::AlarmRinging:
+	if (currentApp != Apps::Alarm){
+		LoadApp(Apps::Alarm, DisplayApp::FullRefreshDirections::Down);
+	}
       case Messages::TouchEvent: {
         if (state != States::Running)
           break;
@@ -352,8 +356,8 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
     case Apps::Steps: 
       currentScreen = std::make_unique<Screens::Steps>(this, motionController, settingsController);
       break;
-    case Apps::HelloWorld:
-      currentScreen = std::make_unique<Screens::HelloWorld>(this);
+    case Apps::Alarm:
+      currentScreen = std::make_unique<Screens::Alarm>(this, dateTimeController);
   }
   currentApp = app;
 }

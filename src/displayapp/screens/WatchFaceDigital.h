@@ -67,6 +67,7 @@ namespace Pinetime {
         lv_obj_t* stepIcon;
         lv_obj_t* stepValue;
         lv_obj_t* notificationIcon;
+        lv_obj_t* label_alarm;
 
         Controllers::DateTime& dateTimeController;
         Controllers::Battery& batteryController;

@@ -301,6 +301,13 @@ void SystemTask::Work() {
           motorController.SetDuration(15);
 	  // Battery level is updated on every message - there's no need to do anything
           break;
+	case Messages::AlarmExpired:
+	  if (isSleeping && !isWakingUp) {
+            GoToRunning();
+          }
+          motorController.SetDuration(150);
+	  displayApp->PushMessage(Pinetime::Applications::Display::Messages::AlarmRinging);
+	  break;
 
         default:
           break;

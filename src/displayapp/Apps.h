@@ -30,7 +30,7 @@ namespace Pinetime {
       SettingDisplay,
       SettingWakeUp,
       SettingSteps,
-      HelloWorld
+      Alarm 
     };
   }
 }

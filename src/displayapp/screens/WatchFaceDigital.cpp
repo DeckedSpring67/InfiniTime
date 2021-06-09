@@ -100,6 +100,12 @@ WatchFaceDigital::WatchFaceDigital(DisplayApp* app,
   lv_obj_set_style_local_text_color(stepIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00FFE7));
   lv_label_set_text(stepIcon, Symbols::shoe);
   lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
+
+  label_alarm = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(label_alarm, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x41454C));
+  lv_label_set_text(label_alarm, "--:--");
+  lv_obj_align(stepIcon, stepValue, LV_ALIGN_IN_TOP_LEFT, -5, 0);
+
 }
 
 WatchFaceDigital::~WatchFaceDigital() {
@@ -151,6 +157,13 @@ bool WatchFaceDigital::Refresh() {
 
     int hour = time.hours().count();
     auto minute = time.minutes().count();
+
+    if (dateTimeController.AlarmRunning()){
+      lv_label_set_text_fmt(label_alarm, "%02d:%02d", dateTimeController.AlarmHour(), dateTimeController.AlarmMinute());
+    }
+    else{
+      lv_label_set_text(label_alarm, "--:--");
+    }
 
     char minutesChar[3];
     sprintf(minutesChar, "%02d", static_cast<int>(minute));

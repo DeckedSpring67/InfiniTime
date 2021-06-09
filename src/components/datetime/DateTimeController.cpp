@@ -8,6 +8,15 @@ using namespace Pinetime::Controllers;
 DateTime::DateTime(System::SystemTask& systemTask) : systemTask {systemTask} {
 }
 
+void DateTime::SetAlarm(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute){
+	alarm_year = year;
+	alarm_month = month;
+	alarm_day = day;
+	alarm_hour = hour;
+	alarm_minute = minute;
+	alarm_running = true;
+}
+
 void DateTime::SetTime(
   uint16_t year, uint8_t month, uint8_t day, uint8_t dayOfWeek, uint8_t hour, uint8_t minute, uint8_t second, uint32_t systickCounter) {
   std::tm tm = {
@@ -66,6 +75,17 @@ void DateTime::UpdateTime(uint32_t systickCounter) {
   hour = time.hours().count();
   minute = time.minutes().count();
   second = time.seconds().count();
+
+  if(alarm_running && hour >= alarm_hour && minute >= alarm_minute){
+	  if(year >= alarm_year){
+		  long days_after_alarm = (year - alarm_year)*365;
+		  days_after_alarm += ((uint8_t)month-alarm_month)*31; //Approximation
+		  days_after_alarm += (day - alarm_day);
+		  if(days_after_alarm >= 0){
+	  		systemTask.PushMessage(System::SystemTask::Messages::AlarmExpired);
+		  }
+	  }
+  }
 
   // Notify new day to SystemTask
   if (hour == 0 and not isMidnightAlreadyNotified) {

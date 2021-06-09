@@ -29,6 +29,16 @@ namespace Pinetime {
 
       DateTime(System::SystemTask& systemTask);
 
+      void SetAlarm(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute);
+
+      void UnsetAlarm(){
+	      alarm_running = false;
+      }
+
+      bool AlarmRunning(){
+	      return alarm_running;
+      }
+
       void SetTime(uint16_t year,
                    uint8_t month,
                    uint8_t day,
@@ -59,6 +69,12 @@ namespace Pinetime {
       uint8_t Seconds() const {
         return second;
       }
+      uint8_t AlarmHour() const{
+	      return alarm_hour;
+      }
+      uint8_t AlarmMinute() const{
+	      return alarm_minute;
+      }
 
       const char* MonthShortToString();
       const char* MonthShortToStringLow();
@@ -84,6 +100,12 @@ namespace Pinetime {
       uint8_t hour = 0;
       uint8_t minute = 0;
       uint8_t second = 0;
+      uint16_t alarm_year = 0;
+      uint8_t alarm_month = 0;
+      uint8_t alarm_day = 0;
+      uint8_t alarm_hour = 0;
+      uint8_t alarm_minute = 0;
+      bool alarm_running = false;
 
       uint32_t previousSystickCounter = 0;
       std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> currentDateTime;
